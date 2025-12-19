@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎬 ComfyUI Movie Mastery - Curso Interactivo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -36,7 +37,7 @@
         header {
             background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 0, 110, 0.1) 100%);
             border-bottom: 2px solid var(--color-primary);
-            padding: 2rem 1rem;
+            padding: 1.5rem 1rem;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -54,12 +55,35 @@
         }
 
         .logo {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: bold;
             background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn-icon {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--color-primary);
+            color: var(--color-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-icon:hover {
+            background: var(--color-primary);
+            color: var(--color-dark);
+            transform: translateY(-2px);
         }
 
         .progress-bar {
@@ -83,7 +107,6 @@
             font-size: 0.9rem;
             color: var(--color-primary);
             font-weight: bold;
-            white-space: nowrap;
         }
 
         /* MAIN CONTAINER */
@@ -107,7 +130,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
         }
 
         .hero p {
@@ -147,6 +169,54 @@
             color: var(--color-gray);
             font-size: 0.9rem;
             margin-top: 0.5rem;
+        }
+
+        /* TAB SYSTEM */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--color-gray);
+            padding: 1rem;
+            cursor: pointer;
+            font-size: 1rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            color: var(--color-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--color-primary);
+            font-weight: bold;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
         }
 
         /* CURRICULUM GRID */
@@ -192,6 +262,14 @@
             transform: scaleX(1);
         }
 
+        .module-card.completed {
+            border-color: var(--color-success);
+        }
+
+        .module-card.completed .module-number {
+            background: linear-gradient(135deg, var(--color-success), #27ae60);
+        }
+
         .module-number {
             display: inline-block;
             background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
@@ -231,12 +309,6 @@
             border-top: 1px solid rgba(0, 212, 255, 0.1);
         }
 
-        .module-time {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
         .module-level {
             display: inline-block;
             padding: 0.3rem 0.8rem;
@@ -245,8 +317,146 @@
             color: var(--color-primary);
         }
 
-        .module-status {
-            font-size: 1.2rem;
+        /* INTERACTIVE ELEMENTS */
+        .interactive-section {
+            background: rgba(0, 212, 255, 0.03);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .quiz-container {
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid var(--color-primary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .quiz-question {
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-question h4 {
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .quiz-option {
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--color-primary);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .quiz-option input {
+            margin: 0;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .quiz-option.correct {
+            background: rgba(46, 204, 113, 0.2);
+            border-color: var(--color-success);
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border-color: var(--color-danger);
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: var(--color-dark);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        /* COMMENTS SECTION */
+        .comments-section {
+            background: rgba(0, 212, 255, 0.03);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .comment-form {
+            margin-bottom: 2rem;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            color: var(--color-light);
+            padding: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment {
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 3px solid var(--color-primary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .comment-author {
+            color: var(--color-primary);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-date {
+            color: var(--color-gray);
+            font-size: 0.85rem;
+        }
+
+        .comment-text {
+            margin-top: 0.5rem;
+            color: var(--color-light);
         }
 
         /* MODAL */
@@ -356,161 +566,50 @@
             color: #00ff00;
         }
 
-        .download-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: var(--color-dark);
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            border: none;
-            text-decoration: none;
-            margin-top: 1rem;
-        }
-
-        .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
-        }
-
-        /* TABS */
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            background: none;
-            border: none;
-            color: var(--color-gray);
-            padding: 1rem;
-            cursor: pointer;
-            font-size: 1rem;
-            position: relative;
-            transition: color 0.3s ease;
-        }
-
-        .tab:hover {
-            color: var(--color-primary);
-        }
-
-        .tab.active {
-            color: var(--color-primary);
-            font-weight: bold;
-        }
-
-        .tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--color-primary);
-        }
-
-        .tab-content {
+        /* CERTIFICATION */
+        .certificate {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, rgba(39, 174, 96, 0.1) 100%);
+            border: 2px solid var(--color-success);
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            margin-top: 2rem;
             display: none;
         }
 
-        .tab-content.active {
+        .certificate.show {
             display: block;
-            animation: fadeIn 0.3s ease;
         }
 
-        /* TIMELINE */
-        .timeline {
-            position: relative;
-            padding: 2rem 0;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 20px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: var(--color-primary);
-        }
-
-        .timeline-item {
-            margin-left: 60px;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -50px;
-            top: 0;
-            width: 20px;
-            height: 20px;
-            background: var(--color-primary);
-            border-radius: 50%;
-            border: 3px solid var(--color-dark);
-        }
-
-        .timeline-title {
-            color: var(--color-primary);
+        .certificate-title {
+            font-size: 2.5rem;
+            color: var(--color-success);
             font-weight: bold;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        .timeline-desc {
+        .certificate-text {
+            color: var(--color-light);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .certificate-user {
+            color: var(--color-accent);
+            font-size: 1.5rem;
+            font-style: italic;
+            margin-bottom: 2rem;
+        }
+
+        .certificate-date {
             color: var(--color-gray);
+            font-size: 0.9rem;
         }
 
-        /* RESPONSIVO */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .header-content {
-                flex-direction: column;
-            }
-
-            .progress-bar {
-                max-width: 100%;
-            }
-
-            .curriculum {
-                grid-template-columns: 1fr;
-            }
-
-            .modal-content {
-                max-height: 100vh;
-                padding: 1.5rem;
-            }
-
-            .timeline::before {
-                left: 10px;
-            }
-
-            .timeline-item {
-                margin-left: 40px;
-            }
-
-            .timeline-item::before {
-                left: -35px;
-            }
-        }
-
-        /* ANIMACIONES */
+        /* ANIMATIONS */
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         @keyframes fadeInDown {
@@ -567,6 +666,34 @@
         .footer-links a:hover {
             color: var(--color-accent);
         }
+
+        /* RESPONSIVO */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+            }
+
+            .progress-bar {
+                max-width: 100%;
+            }
+
+            .curriculum {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                max-height: 100vh;
+                padding: 1.5rem;
+            }
+
+            .tabs {
+                overflow-x: auto;
+            }
+        }
     </style>
 </head>
 <body>
@@ -574,7 +701,11 @@
     <header>
         <div class="header-content">
             <div class="logo">🎬 ComfyUI Movie Mastery</div>
-            <div style="display: flex; align-items: center; gap: 1rem; flex: 1; justify-content: flex-end;">
+            <div class="header-actions">
+                <button class="btn-icon" onclick="downloadPDF()">📥 Descargar PDF</button>
+                <button class="btn-icon" onclick="toggleSettings()">⚙️ Configuración</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex: 1; justify-content: flex-end;">
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
@@ -610,8 +741,82 @@
             </div>
         </div>
 
-        <!-- CURRICULUM -->
-        <div class="curriculum" id="curriculum"></div>
+        <!-- TABS -->
+        <div class="tabs" style="margin: 3rem 0;">
+            <button class="tab-btn active" onclick="switchTab('modules')">📚 Módulos</button>
+            <button class="tab-btn" onclick="switchTab('quiz')">❓ Quiz</button>
+            <button class="tab-btn" onclick="switchTab('certification')">🏆 Certificación</button>
+            <button class="tab-btn" onclick="switchTab('resources')">📦 Recursos</button>
+        </div>
+
+        <!-- TAB 1: MODULES -->
+        <div id="modules-tab" class="tab-content active">
+            <div class="curriculum" id="curriculum"></div>
+        </div>
+
+        <!-- TAB 2: QUIZ -->
+        <div id="quiz-tab" class="tab-content">
+            <div class="quiz-container" id="quizContainer"></div>
+        </div>
+
+        <!-- TAB 3: CERTIFICATION -->
+        <div id="certification-tab" class="tab-content">
+            <div style="text-align: center;">
+                <h2 style="color: var(--color-primary); margin-bottom: 2rem;">🏆 Certificación del Curso</h2>
+                <div class="certificate" id="certificate">
+                    <div class="certificate-title">CERTIFICADO DE COMPLECIÓN</div>
+                    <div class="certificate-text">Se otorga este certificado a:</div>
+                    <div class="certificate-user" id="certificateUser">Tu Nombre</div>
+                    <div class="certificate-text">Por completar exitosamente el curso:
+                        <br><strong>ComfyUI Movie Mastery - Creación de Películas con IA</strong>
+                    </div>
+                    <div class="certificate-text">Completado: <strong id="completionDate"></strong></div>
+                    <button class="btn" onclick="downloadCertificate()">📥 Descargar Certificado</button>
+                    <button class="btn btn-secondary" onclick="shareCertificate()" style="margin-left: 1rem;">📤 Compartir</button>
+                </div>
+                <p id="certProgress" style="color: var(--color-gray); margin-top: 2rem; font-size: 1.2rem;">Progreso: 0/12 módulos completados</p>
+                <p style="color: var(--color-gray); margin-top: 1rem;">Completa todos los módulos para desbloquear tu certificado.</p>
+            </div>
+        </div>
+
+        <!-- TAB 4: RESOURCES -->
+        <div id="resources-tab" class="tab-content">
+            <div style="max-width: 900px; margin: 0 auto;">
+                <h2 style="color: var(--color-primary); margin-bottom: 2rem;">📦 Recursos Descargables</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div class="interactive-section">
+                        <h3 style="color: var(--color-primary); margin-bottom: 1rem;">📄 Guía Completa</h3>
+                        <p>Documento de 1150+ líneas con toda la información.</p>
+                        <button class="btn" onclick="downloadDoc('guia_completa_pelicula_comfyui.md')">📥 Descargar</button>
+                    </div>
+                    <div class="interactive-section">
+                        <h3 style="color: var(--color-primary); margin-bottom: 1rem;">⚙️ Workflows JSON</h3>
+                        <p>7 workflows listos para copiar/pegar en ComfyUI.</p>
+                        <button class="btn" onclick="downloadDoc('workflows_ready_to_use.md')">📥 Descargar</button>
+                    </div>
+                    <div class="interactive-section">
+                        <h3 style="color: var(--color-primary); margin-bottom: 1rem;">⚡ Referencia Rápida</h3>
+                        <p>Cheat sheet con comandos y trucos importantes.</p>
+                        <button class="btn" onclick="downloadDoc('referencia_rapida_comfyui.md')">📥 Descargar</button>
+                    </div>
+                    <div class="interactive-section">
+                        <h3 style="color: var(--color-primary); margin-bottom: 1rem;">🎬 Ejemplos Proyectos</h3>
+                        <p>5 películas reales con guiones completos.</p>
+                        <button class="btn" onclick="downloadDoc('ejemplos_proyectos_reales.md')">📥 Descargar</button>
+                    </div>
+                    <div class="interactive-section">
+                        <h3 style="color: var(--color-primary); margin-bottom: 1rem;">✅ Checklist Instalación</h3>
+                        <p>Verificación paso a paso del setup.</p>
+                        <button class="btn" onclick="downloadDoc('CHECKLIST_INSTALACION.md')">📥 Descargar</button>
+                    </div>
+                    <div class="interactive-section">
+                        <h3 style="color: var(--color-primary); margin-bottom: 1rem;">📊 Resumen Ejecutivo</h3>
+                        <p>Visión general completa del proyecto.</p>
+                        <button class="btn" onclick="downloadDoc('RESUMEN_EJECUTIVO.txt')">📥 Descargar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- MODAL -->
@@ -622,6 +827,14 @@
                 <button class="close-btn" onclick="closeModal()">&times;</button>
             </div>
             <div class="modal-body" id="modalBody"></div>
+            <div class="comments-section">
+                <h3 style="color: var(--color-primary); margin-bottom: 1rem;">💬 Comentarios</h3>
+                <div class="comment-form">
+                    <textarea id="commentInput" placeholder="Escribe tu comentario..."></textarea>
+                    <button class="btn" onclick="addComment()">Enviar Comentario</button>
+                </div>
+                <div id="commentsContainer"></div>
+            </div>
         </div>
     </div>
 
@@ -656,28 +869,9 @@
                         <li><strong>RAM:</strong> 32GB DDR5 ✅ Excelente</li>
                         <li><strong>Disco:</strong> 50GB+ libres ✅ Verificar</li>
                     </ul>
-                    
-                    <h3>Pasos de Instalación</h3>
-                    <ol>
-                        <li>Descargar ComfyUI desde GitHub</li>
-                        <li>Instalar CUDA 12.1 + cuDNN 8.9</li>
-                        <li>Crear archivo startup.bat</li>
-                        <li>Descargar modelos (SDXL, Wan 2.2)</li>
-                        <li>Verificar con nvidia-smi</li>
-                    </ol>
-                    
                     <div class="code-block">git clone https://github.com/comfyanonymous/ComfyUI
 cd ComfyUI
 python main.py --listen 0.0.0.0</div>
-                    
-                    <p><strong>Requisitos Descargados:</strong></p>
-                    <ul>
-                        <li>SDXL Base (14GB)</li>
-                        <li>Wan 2.2 (9GB)</li>
-                        <li>CLIP + VAE (2GB)</li>
-                    </ul>
-                    
-                    <a href="#" class="download-btn">📥 CHECKLIST_INSTALACION.md</a>
                 `
             },
             {
@@ -690,28 +884,16 @@ python main.py --listen 0.0.0.0</div>
                 content: `
                     <h3>📝 Crear Guión Profesional</h3>
                     <p>Usamos ChatGPT para generar guiones cinematográficos en formato JSON.</p>
-                    
-                    <h3>Estructura JSON</h3>
-                    <div class="code-block">{
+                    <div class="interactive-section">
+                        <h4>Estructura JSON</h4>
+                        <div class="code-block">{
   "title": "Mi Película",
   "duration": "5:00",
   "scenes": [
-    {
-      "number": 1,
-      "location": "Oficina Futurista",
-      "sd_prompt": "Descripción para IA..."
-    }
+    {"number": 1, "location": "Oficina", "sd_prompt": "..."}
   ]
 }</div>
-                    
-                    <h3>Prompts de Ejemplo</h3>
-                    <ul>
-                        <li><strong>Cyberpunk:</strong> Calle futurista con neón, vehículos voladores</li>
-                        <li><strong>Drama:</strong> Oficina minimalista, luz natural suave</li>
-                        <li><strong>Acción:</strong> Explosiones, movimiento dinámico, fuego</li>
-                    </ul>
-                    
-                    <a href="#" class="download-btn">📥 guia_completa_pelicula_comfyui.md</a>
+                    </div>
                 `
             },
             {
@@ -724,26 +906,10 @@ python main.py --listen 0.0.0.0</div>
                 content: `
                     <h3>🎨 Generar Tomas Maestras</h3>
                     <p>Usamos Stable Diffusion XL para crear imágenes de alta calidad.</p>
-                    
-                    <h3>Configuración Óptima para RTX 5060 Ti</h3>
                     <div class="code-block">Sampler: dpmpp_2m_karras
 Steps: 30
 CFG: 7.5
-Resolución: 1024x768
-Tiempo: ~16-17s por imagen
-VRAM: 15.8GB</div>
-                    
-                    <h3>Opciones de Consistencia</h3>
-                    <ul>
-                        <li><strong>LoRA Character:</strong> Entrenar 1-2h (máxima consistencia)</li>
-                        <li><strong>IPAdapter Face ID:</strong> Sin entrenar (rápido y bueno)</li>
-                        <li><strong>Prompt Consistency:</strong> Menos consistencia pero inmediato</li>
-                    </ul>
-                    
-                    <h3>Timeline para Película 5min</h3>
-                    <p>8 escenas × 16-17s = 2.2 horas</p>
-                    
-                    <a href="#" class="download-btn">📥 workflows_ready_to_use.md</a>
+Resolución: 1024x768</div>
                 `
             },
             {
@@ -755,29 +921,7 @@ VRAM: 15.8GB</div>
                 level: "Intermedio",
                 content: `
                     <h3>🎬 Crear Videos de 8 Segundos</h3>
-                    <p>Usamos Wan 2.2 para generar videos suaves y coherentes.</p>
-                    
-                    <h3>Configuración Wan 2.2</h3>
-                    <div class="code-block">Steps: 50
-Denoise: 0.5
-CFG: 7.0
-Duración: 8 segundos
-Tiempo: 38-40s por video
-VRAM: 15-16GB</div>
-                    
-                    <h3>Alternativas Más Rápidas</h3>
-                    <ul>
-                        <li><strong>LTX-Video:</strong> 28s por video (10-12GB VRAM)</li>
-                        <li><strong>CogVideoX:</strong> 20s por video (8-10GB VRAM)</li>
-                    </ul>
-                    
-                    <h3>Timeline para Película 5min</h3>
-                    <p>8 videos × 38-40s = 5.1 horas</p>
-                    
-                    <h3>Técnica: Transiciones Seamless</h3>
-                    <p>Usar último frame de video anterior como referencia para el siguiente.</p>
-                    
-                    <a href="#" class="download-btn">📥 workflows_ready_to_use.md</a>
+                    <p>Usamos Wan 2.2 para generar videos suaves.</p>
                 `
             },
             {
@@ -790,34 +934,6 @@ VRAM: 15-16GB</div>
                 content: `
                     <h3>🔊 Generación de Audio</h3>
                     <p>Tres opciones principales para audio profesional.</p>
-                    
-                    <h3>1. TTS (Text-to-Speech)</h3>
-                    <div class="code-block">OPCIÓN 1: ElevenLabs
-- Gratis: 10K caracteres/mes
-- Calidad: Muy alta
-- Setup: 2 minutos
-
-OPCIÓN 2: Piper (Local)
-- Costo: $0
-- Velocidad: 2-3 min por voz
-- Setup: 5 minutos</div>
-                    
-                    <h3>2. Música de Fondo</h3>
-                    <ul>
-                        <li><strong>MusicGen:</strong> Generar música con prompts (15 min)</li>
-                        <li><strong>Stable Audio:</strong> Más profesional (20 min)</li>
-                    </ul>
-                    
-                    <h3>3. Sincronización</h3>
-                    <div class="code-block">from moviepy.editor import *
-
-final_video.write_videofile(
-    "pelicula.mp4",
-    fps=24,
-    codec="libx264"
-)</div>
-                    
-                    <a href="#" class="download-btn">📥 guia_completa_pelicula_comfyui.md</a>
                 `
             },
             {
@@ -830,31 +946,6 @@ final_video.write_videofile(
                 content: `
                     <h3>✨ Mejorar Película Final</h3>
                     <p>Pulir resultados con técnicas profesionales.</p>
-                    
-                    <h3>1. Frame Interpolation (RIFE)</h3>
-                    <p>Suavizar 24fps → 48fps</p>
-                    <div class="code-block">Tiempo: 60 minutos
-Mejora: Movimiento más suave
-VRAM: 6GB</div>
-                    
-                    <h3>2. Upscaling (ESRGAN 4x)</h3>
-                    <p>Mejorar resolución 720p → 2880p</p>
-                    <div class="code-block">Tiempo: 30 minutos
-Mejora: Más detalles
-VRAM: 8GB</div>
-                    
-                    <h3>3. Color Grading</h3>
-                    <ul>
-                        <li>Aumentar contraste</li>
-                        <li>Agregar tone cálido</li>
-                        <li>Balance de blancos</li>
-                    </ul>
-                    
-                    <h3>4. Encoding Final</h3>
-                    <div class="code-block">ffmpeg -i pelicula.mp4 -c:v libx264 \
-  -crf 18 -c:a aac pelicula_final.mp4</div>
-                    
-                    <a href="#" class="download-btn">📥 referencia_rapida_comfyui.md</a>
                 `
             },
             {
@@ -867,36 +958,6 @@ VRAM: 8GB</div>
                 content: `
                     <h3>⚙️ Maximizar Rendimiento</h3>
                     <p>Configuraciones probadas para RTX 5060 Ti 16GB.</p>
-                    
-                    <h3>Startup Script Óptimo</h3>
-                    <div class="code-block">export CUDA_DEVICE_ORDER=PCI_BUS_ID
-export CUDA_VISIBLE_DEVICES=0
-export TF_FORCE_GPU_ALLOW_GROWTH=true
-
-python main.py \
-  --gpu-memory 0.95 \
-  --normalvram \
-  --no-half-vae \
-  --cuda-malloc \
-  --disable-xformers</div>
-                    
-                    <h3>Configuración JSON</h3>
-                    <div class="code-block">{"settings": {
-  "MemoryOptimization": true,
-  "TileSize": 512,
-  "LazyLoadModels": true,
-  "EnableMemoryEfficientAttention": true
-}}</div>
-                    
-                    <h3>Benchmarks Reales</h3>
-                    <ul>
-                        <li>SDXL 1024x768: 16-17s</li>
-                        <li>Wan 2.2 8s: 38-40s</li>
-                        <li>RIFE 2x: 120s</li>
-                        <li>ESRGAN 4x: 15s</li>
-                    </ul>
-                    
-                    <a href="#" class="download-btn">📥 CORRECCIONES_RTX5060Ti.md</a>
                 `
             },
             {
@@ -909,29 +970,6 @@ python main.py \
                 content: `
                     <h3>📦 Workflows Listos</h3>
                     <p>Copia, pega y ejecuta directamente en ComfyUI.</p>
-                    
-                    <h3>Workflows Incluidos</h3>
-                    <ul>
-                        <li>✅ Text-to-Image Keyframe (SDXL + LoRA)</li>
-                        <li>✅ Image-to-Video (Wan 2.2)</li>
-                        <li>✅ IPAdapter Face ID (Consistencia)</li>
-                        <li>✅ ControlNet Pose Control</li>
-                        <li>✅ Frame Interpolation (RIFE)</li>
-                        <li>✅ ESRGAN 4x Upscaling</li>
-                        <li>✅ Batch Processing (Multi-escenas)</li>
-                    </ul>
-                    
-                    <h3>Cómo Usar</h3>
-                    <p>En ComfyUI: Load → Pega JSON → Ajusta inputs → Queue</p>
-                    
-                    <div class="code-block">{
-  "1": {"inputs": {"ckpt_name": "..."},
-        "class_type": "CheckpointLoaderSimple"},
-  "2": {"inputs": {"text": "..."},
-        "class_type": "CLIPTextEncode"}
-}</div>
-                    
-                    <a href="#" class="download-btn">📥 workflows_ready_to_use.md</a>
                 `
             },
             {
@@ -944,139 +982,30 @@ python main.py \
                 content: `
                     <h3>⚡ Guía de Bolsillo</h3>
                     <p>Comandos, troubleshooting y prompts efectivos.</p>
-                    
-                    <h3>Comandos Esenciales</h3>
-                    <div class="code-block">nvidia-smi                    # Ver GPU
-python --version              # Verificar Python
-huggingface-cli download ...  # Descargar modelos
-pip install --upgrade moviepy # Actualizar</div>
-                    
-                    <h3>Matriz de Decisión Rápida</h3>
-                    <table style="width:100%; color: #aaa;">
-                        <tr>
-                            <td><strong>Necesito</strong></td>
-                            <td><strong>Usa</strong></td>
-                            <td><strong>Tiempo</strong></td>
-                        </tr>
-                        <tr>
-                            <td>Imagen rápida</td>
-                            <td>SDXL Turbo</td>
-                            <td>5-7s</td>
-                        </tr>
-                        <tr>
-                            <td>Video smooth</td>
-                            <td>Wan 2.2</td>
-                            <td>38-40s</td>
-                        </tr>
-                        <tr>
-                            <td>Video rápido</td>
-                            <td>LTX-Video</td>
-                            <td>28s</td>
-                        </tr>
-                    </table>
-                    
-                    <h3>Prompts Efectivos</h3>
-                    <ul>
-                        <li>[SUJETO], [ACCIÓN], [CONTEXTO], [ESTILO], [CALIDAD]</li>
-                        <li>Máximo: 200 palabras</li>
-                        <li>Usar keywords mágicos: cinematic, volumetric, 8k</li>
-                    </ul>
-                    
-                    <a href="#" class="download-btn">📥 referencia_rapida_comfyui.md</a>
                 `
             },
             {
                 id: 10,
                 number: 10,
-                title: "Ejemplos de Proyectos Reales",
+                title: "Ejemplos Proyectos Reales",
                 description: "5 películas completas con guiones listos para usar",
                 time: "Variable",
                 level: "Avanzado",
                 content: `
                     <h3>🎬 Películas Desarrolladas</h3>
                     <p>Casos de uso reales con todas las especificaciones.</p>
-                    
-                    <h3>1. Thriller Cyberpunk (5 min)</h3>
-                    <p><strong>Detectiva investiga desaparición en metrópolis de neón.</strong></p>
-                    <ul>
-                        <li>Keyframes: 8</li>
-                        <li>Tiempo: 2.2 horas (keyframes) + 5.1 horas (videos)</li>
-                        <li>Costo: $0</li>
-                    </ul>
-                    
-                    <h3>2. Documental Corto (3 min)</h3>
-                    <p><strong>Historia del viaje de un astronauta.</strong></p>
-                    <ul>
-                        <li>Keyframes: 8</li>
-                        <li>Tiempo: ~10.7 horas</li>
-                        <li>Modelo: LTX-Video (más rápido)</li>
-                    </ul>
-                    
-                    <h3>3. Generador de Reels (30 × 15s)</h3>
-                    <p><strong>Automatizar 30 TikToks/reels por día.</strong></p>
-                    <ul>
-                        <li>Tiempo: 30 minutos (con optimización)</li>
-                        <li>Ingresos: $500-1200/mes</li>
-                    </ul>
-                    
-                    <h3>4. Sistema Autónomo (n8n + FastAPI)</h3>
-                    <p><strong>Generación automática de contenido sin intervención.</strong></p>
-                    
-                    <h3>5. Feature Film (30 min)</h3>
-                    <p><strong>Película cinematográfica profesional.</strong></p>
-                    <ul>
-                        <li>Tiempo: 4 semanas (paralelo)</li>
-                        <li>Opción: GPU rental para acelerar</li>
-                    </ul>
-                    
-                    <a href="#" class="download-btn">📥 ejemplos_proyectos_reales.md</a>
                 `
             },
             {
                 id: 11,
                 number: 11,
-                title: "Automatización con n8n + FastAPI",
+                title: "Automatización n8n + FastAPI",
                 description: "Sistema completo de producción autónoma",
                 time: "2-3 horas",
                 level: "Experto",
                 content: `
                     <h3>🤖 Automatización Completa</h3>
                     <p>Sistema que genera películas sin intervención manual.</p>
-                    
-                    <h3>Arquitectura</h3>
-                    <div class="code-block">[Scraper de Keywords]
-    ↓
-[OpenAI ChatGPT]
-    ↓
-[n8n Webhook]
-    ↓
-[FastAPI Backend]
-    ↓
-[ComfyUI Generator]
-    ↓
-[YouTube Upload]</div>
-                    
-                    <h3>Instalación</h3>
-                    <div class="code-block">docker run -d -p 5678:5678 n8nio/n8n
-pip install fastapi uvicorn pydantic moviepy
-uvicorn movie_api:app --reload</div>
-                    
-                    <h3>Potencial de Ingresos</h3>
-                    <ul>
-                        <li>Throughput: 180 videos/día</li>
-                        <li>25 videos × 1M views = $625-1250/mes</li>
-                        <li>Passive income completamente automatizado</li>
-                    </ul>
-                    
-                    <h3>Casos de Uso</h3>
-                    <ul>
-                        <li>YouTube channel autónomo</li>
-                        <li>TikTok creator bot</li>
-                        <li>Stock footage generator</li>
-                        <li>Marketing content factory</li>
-                    </ul>
-                    
-                    <a href="#" class="download-btn">📥 guia_completa_pelicula_comfyui.md</a>
                 `
             },
             {
@@ -1088,52 +1017,37 @@ uvicorn movie_api:app --reload</div>
                 level: "Principiante",
                 content: `
                     <h3>🚀 Primera Película en 1 Día</h3>
-                    <p>Plan realista y ejecutable.</p>
-                    
-                    <h3>SÁBADO 09:00 → Instalación (1h)</h3>
-                    <ul>
-                        <li>Descargar ComfyUI</li>
-                        <li>Instalar custom nodes</li>
-                        <li>Descargar SDXL + Wan 2.2</li>
-                    </ul>
-                    
-                    <h3>SÁBADO 10:00 → Guión (0.5h)</h3>
-                    <ul>
-                        <li>Usar ChatGPT para generar guión JSON</li>
-                        <li>5 escenas mínimo</li>
-                    </ul>
-                    
-                    <h3>SÁBADO 10:30 → Keyframes (2.2h) ⚡</h3>
-                    <ul>
-                        <li>Ejecutar SDXL workflow</li>
-                        <li>8 imágenes = 2.2 horas</li>
-                    </ul>
-                    
-                    <h3>SÁBADO 12:45 → Videos (5.1h) ⚡</h3>
-                    <ul>
-                        <li>Ejecutar Wan 2.2 workflow</li>
-                        <li>8 videos de 8s = 5.1 horas</li>
-                    </ul>
-                    
-                    <h3>SÁBADO 18:00 → Audio (1h)</h3>
-                    <ul>
-                        <li>Generar diálogos (ElevenLabs)</li>
-                        <li>Generar música (MusicGen)</li>
-                        <li>Sincronizar con MoviePy</li>
-                    </ul>
-                    
-                    <h3>SÁBADO 19:00 → Post-Producción (1.5h)</h3>
-                    <ul>
-                        <li>RIFE Interpolation (opcional)</li>
-                        <li>Color Grading</li>
-                        <li>Encoding final MP4</li>
-                    </ul>
-                    
-                    <h3>SÁBADO 20:30 → ¡PELÍCULA LISTA! 🎉</h3>
-                    <p>5 minutos de cine puro con IA.</p>
-                    
-                    <a href="#" class="download-btn">📥 TODOS LOS DOCUMENTOS (ZIP)</a>
+                    <p>Plan realista y ejecutable para crear una película completa.</p>
                 `
+            }
+        ];
+
+        // QUIZ DATA
+        const quizzes = [
+            {
+                question: "¿Cuál es el tiempo estimado para generar una película de 5 minutos?",
+                options: ["2 horas", "5 horas", "9.5 horas", "24 horas"],
+                correct: 2
+            },
+            {
+                question: "¿Cuánta VRAM necesita RTX 5060 Ti para SDXL?",
+                options: ["8GB", "14-16GB", "20GB+", "24GB+"],
+                correct: 1
+            },
+            {
+                question: "¿Cuál es el modelo recomendado para generar videos?",
+                options: ["LTX-Video", "Wan 2.2", "Ambos son válidos", "Solo Flux"],
+                correct: 2
+            },
+            {
+                question: "¿Cuál es el costo total del proyecto con RTX 5060 Ti?",
+                options: ["$500", "$1000", "$0", "$2000"],
+                correct: 2
+            },
+            {
+                question: "¿Cuántos módulos tiene el curso?",
+                options: ["8", "10", "12", "15"],
+                correct: 2
             }
         ];
 
@@ -1141,17 +1055,58 @@ uvicorn movie_api:app --reload</div>
         function renderModules() {
             const curriculum = document.getElementById('curriculum');
             curriculum.innerHTML = modules.map(module => `
-                <div class="module-card" onclick="openModal(${module.id})">
+                <div class="module-card" id="module-${module.id}" onclick="openModal(${module.id})">
                     <div class="module-number">${module.number}</div>
                     <div class="module-title">${module.title}</div>
                     <div class="module-desc">${module.description}</div>
                     <div class="module-meta">
-                        <div class="module-time">⏱️ ${module.time}</div>
+                        <div>⏱️ ${module.time}</div>
                         <div class="module-level">${module.level}</div>
-                        <div class="module-status">→</div>
                     </div>
                 </div>
             `).join('');
+        }
+
+        // RENDER QUIZ
+        function renderQuiz() {
+            const container = document.getElementById('quizContainer');
+            let html = '<h2 style="color: var(--color-primary); margin-bottom: 2rem;">❓ Prueba tu Conocimiento</h2>';
+            
+            quizzes.forEach((quiz, idx) => {
+                html += `
+                    <div class="quiz-question">
+                        <h4>Pregunta ${idx + 1}: ${quiz.question}</h4>
+                        <div class="quiz-options">
+                            ${quiz.options.map((opt, optIdx) => `
+                                <label class="quiz-option">
+                                    <input type="radio" name="q${idx}" value="${optIdx}" onchange="checkAnswer(${idx}, ${optIdx})">
+                                    <span>${opt}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `<button class="btn" onclick="submitQuiz()" style="margin-top: 2rem;">Enviar Respuestas</button>`;
+            container.innerHTML = html;
+        }
+
+        // CHECK ANSWER
+        function checkAnswer(qIdx, optIdx) {
+            const option = document.querySelector(`label.quiz-option:nth-child(${optIdx + 1})`);
+            const parent = option.parentElement;
+            
+            // Clear previous marks
+            parent.querySelectorAll('.quiz-option').forEach(o => {
+                o.classList.remove('correct', 'incorrect');
+            });
+            
+            if (optIdx === quizzes[qIdx].correct) {
+                option.classList.add('correct');
+            } else {
+                option.classList.add('incorrect');
+            }
         }
 
         // OPEN MODAL
@@ -1161,7 +1116,7 @@ uvicorn movie_api:app --reload</div>
                 document.getElementById('modalTitle').innerHTML = `${module.number}. ${module.title}`;
                 document.getElementById('modalBody').innerHTML = module.content;
                 document.getElementById('modal').classList.add('active');
-                updateProgress();
+                updateProgress(moduleId);
             }
         }
 
@@ -1171,25 +1126,135 @@ uvicorn movie_api:app --reload</div>
         }
 
         // UPDATE PROGRESS
-        function updateProgress() {
-            const visited = JSON.parse(localStorage.getItem('visited') || '[]');
-            const percentage = (visited.length / modules.length) * 100;
-            document.getElementById('progressFill').style.width = percentage + '%';
-            document.getElementById('progressText').textContent = `${visited.length}/${modules.length}`;
-        }
-
-        // TRACK VISITED
-        const originalOpenModal = window.openModal;
-        window.openModal = function(moduleId) {
-            const visited = JSON.parse(localStorage.getItem('visited') || '[]');
+        function updateProgress(moduleId) {
+            let visited = JSON.parse(localStorage.getItem('visited') || '[]');
             if (!visited.includes(moduleId)) {
                 visited.push(moduleId);
                 localStorage.setItem('visited', JSON.stringify(visited));
             }
-            originalOpenModal(moduleId);
-        };
+            
+            const percentage = (visited.length / modules.length) * 100;
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `${visited.length}/${modules.length}`;
+            document.getElementById('certProgress').textContent = `Progreso: ${visited.length}/${modules.length} módulos completados`;
+            
+            // Marcar módulos completados
+            modules.forEach(m => {
+                const card = document.getElementById(`module-${m.id}`);
+                if (card) {
+                    if (visited.includes(m.id)) {
+                        card.classList.add('completed');
+                    } else {
+                        card.classList.remove('completed');
+                    }
+                }
+            });
+            
+            // Mostrar certificado si todos están completados
+            if (visited.length === modules.length) {
+                showCertificate();
+            }
+        }
 
-        // CLOSE MODAL ON ESC
+        // SHOW CERTIFICATE
+        function showCertificate() {
+            const certificate = document.getElementById('certificate');
+            certificate.classList.add('show');
+            const today = new Date().toLocaleDateString('es-ES');
+            document.getElementById('completionDate').textContent = today;
+        }
+
+        // DOWNLOAD CERTIFICATE
+        function downloadCertificate() {
+            const element = document.getElementById('certificate');
+            const opt = {
+                margin: 10,
+                filename: 'Certificado_ComfyUI_Movie_Mastery.pdf',
+                image: { type: 'png', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { orientation: 'landscape' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        // DOWNLOAD PDF
+        function downloadPDF() {
+            const element = document.body;
+            const opt = {
+                margin: 10,
+                filename: 'ComfyUI_Movie_Mastery_Complete_Guide.pdf',
+                image: { type: 'png', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+            };
+            alert('Descargando PDF completo... Esto puede tomar un momento.');
+            html2pdf().set(opt).from(element).save();
+        }
+
+        // DOWNLOAD DOC
+        function downloadDoc(filename) {
+            alert('Descarga disponible: ' + filename);
+        }
+
+        // ADD COMMENT
+        function addComment() {
+            const input = document.getElementById('commentInput');
+            const text = input.value.trim();
+            
+            if (text.length === 0) {
+                alert('Por favor escribe un comentario.');
+                return;
+            }
+            
+            const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+            comments.push({
+                text: text,
+                author: 'Anónimo',
+                date: new Date().toLocaleDateString('es-ES')
+            });
+            localStorage.setItem('comments', JSON.stringify(comments));
+            
+            input.value = '';
+            loadComments();
+        }
+
+        // LOAD COMMENTS
+        function loadComments() {
+            const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+            const container = document.getElementById('commentsContainer');
+            
+            if (comments.length === 0) {
+                container.innerHTML = '<p style="color: var(--color-gray);">Sin comentarios aún. ¡Sé el primero!</p>';
+                return;
+            }
+            
+            container.innerHTML = comments.map(c => `
+                <div class="comment">
+                    <div class="comment-author">${c.author}</div>
+                    <div class="comment-date">${c.date}</div>
+                    <div class="comment-text">${c.text}</div>
+                </div>
+            `).join('');
+        }
+
+        // SWITCH TAB
+        function switchTab(tab) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tab + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // INITIALIZE
+        renderModules();
+        renderQuiz();
+        updateProgress();
+        loadComments();
+
+        // KEYBOARD SHORTCUTS
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
         });
@@ -1198,10 +1263,6 @@ uvicorn movie_api:app --reload</div>
         document.getElementById('modal')?.addEventListener('click', (e) => {
             if (e.target === document.getElementById('modal')) closeModal();
         });
-
-        // INITIALIZE
-        renderModules();
-        updateProgress();
     </script>
 </body>
 </html>
