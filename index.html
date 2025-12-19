@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 ComfyUI Movie Mastery - Curso Interactivo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #00d4ff;
+            --color-secondary: #ff006e;
+            --color-accent: #ffd60a;
+            --color-dark: #0a0e27;
+            --color-darker: #070a1e;
+            --color-light: #f8f9fa;
+            --color-gray: #6c757d;
+            --color-success: #2ecc71;
+            --color-warning: #f39c12;
+            --color-danger: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--color-darker) 0%, var(--color-dark) 100%);
+            color: var(--color-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 0, 110, 0.1) 100%);
+            border-bottom: 2px solid var(--color-primary);
+            padding: 2rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            flex: 1;
+            max-width: 300px;
+            min-width: 150px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: var(--color-primary);
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--color-gray);
+            margin-bottom: 2rem;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--color-primary);
+            background: rgba(0, 212, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            color: var(--color-primary);
+            font-weight: bold;
+        }
+
+        .stat-label {
+            color: var(--color-gray);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* CURRICULUM GRID */
+        .curriculum {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .module-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(255, 0, 110, 0.05) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .module-card:hover {
+            border-color: var(--color-primary);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 0, 110, 0.1) 100%);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .module-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .module-number {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: var(--color-dark);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+            color: var(--color-primary);
+        }
+
+        .module-desc {
+            color: var(--color-gray);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .module-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--color-gray);
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .module-time {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .module-level {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 20px;
+            color: var(--color-primary);
+        }
+
+        .module-status {
+            font-size: 1.2rem;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--color-dark);
+            border: 1px solid var(--color-primary);
+            border-radius: 15px;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: var(--color-primary);
+        }
+
+        .close-btn {
+            font-size: 2rem;
+            color: var(--color-gray);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .close-btn:hover {
+            color: var(--color-primary);
+        }
+
+        .modal-body {
+            color: var(--color-light);
+        }
+
+        .modal-body h3 {
+            color: var(--color-primary);
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-body p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .modal-body ul {
+            list-style: none;
+            margin-bottom: 1rem;
+            padding-left: 0;
+        }
+
+        .modal-body li {
+            padding: 0.5rem 0 0.5rem 1.5rem;
+            position: relative;
+        }
+
+        .modal-body li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--color-primary);
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 3px solid var(--color-primary);
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+            color: #00ff00;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: var(--color-dark);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+            margin-top: 1rem;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            background: none;
+            border: none;
+            color: var(--color-gray);
+            padding: 1rem;
+            cursor: pointer;
+            font-size: 1rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .tab:hover {
+            color: var(--color-primary);
+        }
+
+        .tab.active {
+            color: var(--color-primary);
+            font-weight: bold;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* TIMELINE */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--color-primary);
+        }
+
+        .timeline-item {
+            margin-left: 60px;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -50px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            border: 3px solid var(--color-dark);
+        }
+
+        .timeline-title {
+            color: var(--color-primary);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-desc {
+            color: var(--color-gray);
+        }
+
+        /* RESPONSIVO */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+            }
+
+            .progress-bar {
+                max-width: 100%;
+            }
+
+            .curriculum {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                max-height: 100vh;
+                padding: 1.5rem;
+            }
+
+            .timeline::before {
+                left: 10px;
+            }
+
+            .timeline-item {
+                margin-left: 40px;
+            }
+
+            .timeline-item::before {
+                left: -35px;
+            }
+        }
+
+        /* ANIMACIONES */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* FOOTER */
+        footer {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(255, 0, 110, 0.05) 100%);
+            border-top: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 2rem 1rem;
+            margin-top: 4rem;
+            text-align: center;
+            color: var(--color-gray);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-accent);
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="header-content">
+            <div class="logo">🎬 ComfyUI Movie Mastery</div>
+            <div style="display: flex; align-items: center; gap: 1rem; flex: 1; justify-content: flex-end;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">0/12</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <!-- HERO -->
+        <div class="hero">
+            <h1>Crea Películas Completas con ComfyUI + IA</h1>
+            <p>Guía interactiva exhaustiva para producir películas profesionales con RTX 5060 Ti</p>
+            
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Módulos Interactivos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">9.5h</div>
+                    <div class="stat-label">Tiempo Primera Película</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">$0</div>
+                    <div class="stat-label">Costo Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5000+</div>
+                    <div class="stat-label">Líneas Documentación</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CURRICULUM -->
+        <div class="curriculum" id="curriculum"></div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle"></div>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://github.com/ariakass/comfyui-movie-guide" target="_blank">GitHub</a>
+                <a href="#">Documentación</a>
+                <a href="#">Soporte</a>
+                <a href="#">Comunidad</a>
+            </div>
+            <p>&copy; 2025 ComfyUI Movie Mastery. Creado para expertos en producción audiovisual.</p>
+        </div>
+    </footer>
+
+    <script>
+        // CURRICULUM DATA
+        const modules = [
+            {
+                id: 1,
+                number: 1,
+                title: "Introducción & Setup",
+                description: "Instalación rápida de ComfyUI y configuración de RTX 5060 Ti",
+                time: "15 min",
+                level: "Principiante",
+                content: `
+                    <h3>🚀 Instalación Rápida (15 minutos)</h3>
+                    <p>Tu PC requiere:</p>
+                    <ul>
+                        <li><strong>GPU:</strong> RTX 5060 Ti 16GB ✅ Perfecto</li>
+                        <li><strong>RAM:</strong> 32GB DDR5 ✅ Excelente</li>
+                        <li><strong>Disco:</strong> 50GB+ libres ✅ Verificar</li>
+                    </ul>
+                    
+                    <h3>Pasos de Instalación</h3>
+                    <ol>
+                        <li>Descargar ComfyUI desde GitHub</li>
+                        <li>Instalar CUDA 12.1 + cuDNN 8.9</li>
+                        <li>Crear archivo startup.bat</li>
+                        <li>Descargar modelos (SDXL, Wan 2.2)</li>
+                        <li>Verificar con nvidia-smi</li>
+                    </ol>
+                    
+                    <div class="code-block">git clone https://github.com/comfyanonymous/ComfyUI
+cd ComfyUI
+python main.py --listen 0.0.0.0</div>
+                    
+                    <p><strong>Requisitos Descargados:</strong></p>
+                    <ul>
+                        <li>SDXL Base (14GB)</li>
+                        <li>Wan 2.2 (9GB)</li>
+                        <li>CLIP + VAE (2GB)</li>
+                    </ul>
+                    
+                    <a href="#" class="download-btn">📥 CHECKLIST_INSTALACION.md</a>
+                `
+            },
+            {
+                id: 2,
+                number: 2,
+                title: "Fase 1: Generación de Guión",
+                description: "Escribir y estructurar el guión cinematográfico",
+                time: "30 min",
+                level: "Principiante",
+                content: `
+                    <h3>📝 Crear Guión Profesional</h3>
+                    <p>Usamos ChatGPT para generar guiones cinematográficos en formato JSON.</p>
+                    
+                    <h3>Estructura JSON</h3>
+                    <div class="code-block">{
+  "title": "Mi Película",
+  "duration": "5:00",
+  "scenes": [
+    {
+      "number": 1,
+      "location": "Oficina Futurista",
+      "sd_prompt": "Descripción para IA..."
+    }
+  ]
+}</div>
+                    
+                    <h3>Prompts de Ejemplo</h3>
+                    <ul>
+                        <li><strong>Cyberpunk:</strong> Calle futurista con neón, vehículos voladores</li>
+                        <li><strong>Drama:</strong> Oficina minimalista, luz natural suave</li>
+                        <li><strong>Acción:</strong> Explosiones, movimiento dinámico, fuego</li>
+                    </ul>
+                    
+                    <a href="#" class="download-btn">📥 guia_completa_pelicula_comfyui.md</a>
+                `
+            },
+            {
+                id: 3,
+                number: 3,
+                title: "Fase 2: Generación de Keyframes",
+                description: "Convertir prompts en tomas visuales con SDXL",
+                time: "2.2 horas",
+                level: "Intermedio",
+                content: `
+                    <h3>🎨 Generar Tomas Maestras</h3>
+                    <p>Usamos Stable Diffusion XL para crear imágenes de alta calidad.</p>
+                    
+                    <h3>Configuración Óptima para RTX 5060 Ti</h3>
+                    <div class="code-block">Sampler: dpmpp_2m_karras
+Steps: 30
+CFG: 7.5
+Resolución: 1024x768
+Tiempo: ~16-17s por imagen
+VRAM: 15.8GB</div>
+                    
+                    <h3>Opciones de Consistencia</h3>
+                    <ul>
+                        <li><strong>LoRA Character:</strong> Entrenar 1-2h (máxima consistencia)</li>
+                        <li><strong>IPAdapter Face ID:</strong> Sin entrenar (rápido y bueno)</li>
+                        <li><strong>Prompt Consistency:</strong> Menos consistencia pero inmediato</li>
+                    </ul>
+                    
+                    <h3>Timeline para Película 5min</h3>
+                    <p>8 escenas × 16-17s = 2.2 horas</p>
+                    
+                    <a href="#" class="download-btn">📥 workflows_ready_to_use.md</a>
+                `
+            },
+            {
+                id: 4,
+                number: 4,
+                title: "Fase 3: Generación de Videos",
+                description: "Convertir keyframes en videos dinámicos con Wan 2.2",
+                time: "5.1 horas",
+                level: "Intermedio",
+                content: `
+                    <h3>🎬 Crear Videos de 8 Segundos</h3>
+                    <p>Usamos Wan 2.2 para generar videos suaves y coherentes.</p>
+                    
+                    <h3>Configuración Wan 2.2</h3>
+                    <div class="code-block">Steps: 50
+Denoise: 0.5
+CFG: 7.0
+Duración: 8 segundos
+Tiempo: 38-40s por video
+VRAM: 15-16GB</div>
+                    
+                    <h3>Alternativas Más Rápidas</h3>
+                    <ul>
+                        <li><strong>LTX-Video:</strong> 28s por video (10-12GB VRAM)</li>
+                        <li><strong>CogVideoX:</strong> 20s por video (8-10GB VRAM)</li>
+                    </ul>
+                    
+                    <h3>Timeline para Película 5min</h3>
+                    <p>8 videos × 38-40s = 5.1 horas</p>
+                    
+                    <h3>Técnica: Transiciones Seamless</h3>
+                    <p>Usar último frame de video anterior como referencia para el siguiente.</p>
+                    
+                    <a href="#" class="download-btn">📥 workflows_ready_to_use.md</a>
+                `
+            },
+            {
+                id: 5,
+                number: 5,
+                title: "Fase 4: Audio & Música",
+                description: "Generar TTS, música y sincronizar con video",
+                time: "30 minutos",
+                level: "Intermedio",
+                content: `
+                    <h3>🔊 Generación de Audio</h3>
+                    <p>Tres opciones principales para audio profesional.</p>
+                    
+                    <h3>1. TTS (Text-to-Speech)</h3>
+                    <div class="code-block">OPCIÓN 1: ElevenLabs
+- Gratis: 10K caracteres/mes
+- Calidad: Muy alta
+- Setup: 2 minutos
+
+OPCIÓN 2: Piper (Local)
+- Costo: $0
+- Velocidad: 2-3 min por voz
+- Setup: 5 minutos</div>
+                    
+                    <h3>2. Música de Fondo</h3>
+                    <ul>
+                        <li><strong>MusicGen:</strong> Generar música con prompts (15 min)</li>
+                        <li><strong>Stable Audio:</strong> Más profesional (20 min)</li>
+                    </ul>
+                    
+                    <h3>3. Sincronización</h3>
+                    <div class="code-block">from moviepy.editor import *
+
+final_video.write_videofile(
+    "pelicula.mp4",
+    fps=24,
+    codec="libx264"
+)</div>
+                    
+                    <a href="#" class="download-btn">📥 guia_completa_pelicula_comfyui.md</a>
+                `
+            },
+            {
+                id: 6,
+                number: 6,
+                title: "Fase 5: Post-Producción",
+                description: "Frame interpolation, upscaling y color grading",
+                time: "1.5 horas",
+                level: "Avanzado",
+                content: `
+                    <h3>✨ Mejorar Película Final</h3>
+                    <p>Pulir resultados con técnicas profesionales.</p>
+                    
+                    <h3>1. Frame Interpolation (RIFE)</h3>
+                    <p>Suavizar 24fps → 48fps</p>
+                    <div class="code-block">Tiempo: 60 minutos
+Mejora: Movimiento más suave
+VRAM: 6GB</div>
+                    
+                    <h3>2. Upscaling (ESRGAN 4x)</h3>
+                    <p>Mejorar resolución 720p → 2880p</p>
+                    <div class="code-block">Tiempo: 30 minutos
+Mejora: Más detalles
+VRAM: 8GB</div>
+                    
+                    <h3>3. Color Grading</h3>
+                    <ul>
+                        <li>Aumentar contraste</li>
+                        <li>Agregar tone cálido</li>
+                        <li>Balance de blancos</li>
+                    </ul>
+                    
+                    <h3>4. Encoding Final</h3>
+                    <div class="code-block">ffmpeg -i pelicula.mp4 -c:v libx264 \
+  -crf 18 -c:a aac pelicula_final.mp4</div>
+                    
+                    <a href="#" class="download-btn">📥 referencia_rapida_comfyui.md</a>
+                `
+            },
+            {
+                id: 7,
+                number: 7,
+                title: "Optimizaciones RTX 5060 Ti",
+                description: "Configuraciones específicas para tu GPU",
+                time: "30 min",
+                level: "Avanzado",
+                content: `
+                    <h3>⚙️ Maximizar Rendimiento</h3>
+                    <p>Configuraciones probadas para RTX 5060 Ti 16GB.</p>
+                    
+                    <h3>Startup Script Óptimo</h3>
+                    <div class="code-block">export CUDA_DEVICE_ORDER=PCI_BUS_ID
+export CUDA_VISIBLE_DEVICES=0
+export TF_FORCE_GPU_ALLOW_GROWTH=true
+
+python main.py \
+  --gpu-memory 0.95 \
+  --normalvram \
+  --no-half-vae \
+  --cuda-malloc \
+  --disable-xformers</div>
+                    
+                    <h3>Configuración JSON</h3>
+                    <div class="code-block">{"settings": {
+  "MemoryOptimization": true,
+  "TileSize": 512,
+  "LazyLoadModels": true,
+  "EnableMemoryEfficientAttention": true
+}}</div>
+                    
+                    <h3>Benchmarks Reales</h3>
+                    <ul>
+                        <li>SDXL 1024x768: 16-17s</li>
+                        <li>Wan 2.2 8s: 38-40s</li>
+                        <li>RIFE 2x: 120s</li>
+                        <li>ESRGAN 4x: 15s</li>
+                    </ul>
+                    
+                    <a href="#" class="download-btn">📥 CORRECCIONES_RTX5060Ti.md</a>
+                `
+            },
+            {
+                id: 8,
+                number: 8,
+                title: "Workflows Ready-to-Use",
+                description: "7 workflows JSON para copiar/pegar directamente",
+                time: "Variable",
+                level: "Intermedio",
+                content: `
+                    <h3>📦 Workflows Listos</h3>
+                    <p>Copia, pega y ejecuta directamente en ComfyUI.</p>
+                    
+                    <h3>Workflows Incluidos</h3>
+                    <ul>
+                        <li>✅ Text-to-Image Keyframe (SDXL + LoRA)</li>
+                        <li>✅ Image-to-Video (Wan 2.2)</li>
+                        <li>✅ IPAdapter Face ID (Consistencia)</li>
+                        <li>✅ ControlNet Pose Control</li>
+                        <li>✅ Frame Interpolation (RIFE)</li>
+                        <li>✅ ESRGAN 4x Upscaling</li>
+                        <li>✅ Batch Processing (Multi-escenas)</li>
+                    </ul>
+                    
+                    <h3>Cómo Usar</h3>
+                    <p>En ComfyUI: Load → Pega JSON → Ajusta inputs → Queue</p>
+                    
+                    <div class="code-block">{
+  "1": {"inputs": {"ckpt_name": "..."},
+        "class_type": "CheckpointLoaderSimple"},
+  "2": {"inputs": {"text": "..."},
+        "class_type": "CLIPTextEncode"}
+}</div>
+                    
+                    <a href="#" class="download-btn">📥 workflows_ready_to_use.md</a>
+                `
+            },
+            {
+                id: 9,
+                number: 9,
+                title: "Referencia Rápida",
+                description: "Cheat sheet de bolsillo con comandos y prompts",
+                time: "Consulta",
+                level: "Principiante",
+                content: `
+                    <h3>⚡ Guía de Bolsillo</h3>
+                    <p>Comandos, troubleshooting y prompts efectivos.</p>
+                    
+                    <h3>Comandos Esenciales</h3>
+                    <div class="code-block">nvidia-smi                    # Ver GPU
+python --version              # Verificar Python
+huggingface-cli download ...  # Descargar modelos
+pip install --upgrade moviepy # Actualizar</div>
+                    
+                    <h3>Matriz de Decisión Rápida</h3>
+                    <table style="width:100%; color: #aaa;">
+                        <tr>
+                            <td><strong>Necesito</strong></td>
+                            <td><strong>Usa</strong></td>
+                            <td><strong>Tiempo</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Imagen rápida</td>
+                            <td>SDXL Turbo</td>
+                            <td>5-7s</td>
+                        </tr>
+                        <tr>
+                            <td>Video smooth</td>
+                            <td>Wan 2.2</td>
+                            <td>38-40s</td>
+                        </tr>
+                        <tr>
+                            <td>Video rápido</td>
+                            <td>LTX-Video</td>
+                            <td>28s</td>
+                        </tr>
+                    </table>
+                    
+                    <h3>Prompts Efectivos</h3>
+                    <ul>
+                        <li>[SUJETO], [ACCIÓN], [CONTEXTO], [ESTILO], [CALIDAD]</li>
+                        <li>Máximo: 200 palabras</li>
+                        <li>Usar keywords mágicos: cinematic, volumetric, 8k</li>
+                    </ul>
+                    
+                    <a href="#" class="download-btn">📥 referencia_rapida_comfyui.md</a>
+                `
+            },
+            {
+                id: 10,
+                number: 10,
+                title: "Ejemplos de Proyectos Reales",
+                description: "5 películas completas con guiones listos para usar",
+                time: "Variable",
+                level: "Avanzado",
+                content: `
+                    <h3>🎬 Películas Desarrolladas</h3>
+                    <p>Casos de uso reales con todas las especificaciones.</p>
+                    
+                    <h3>1. Thriller Cyberpunk (5 min)</h3>
+                    <p><strong>Detectiva investiga desaparición en metrópolis de neón.</strong></p>
+                    <ul>
+                        <li>Keyframes: 8</li>
+                        <li>Tiempo: 2.2 horas (keyframes) + 5.1 horas (videos)</li>
+                        <li>Costo: $0</li>
+                    </ul>
+                    
+                    <h3>2. Documental Corto (3 min)</h3>
+                    <p><strong>Historia del viaje de un astronauta.</strong></p>
+                    <ul>
+                        <li>Keyframes: 8</li>
+                        <li>Tiempo: ~10.7 horas</li>
+                        <li>Modelo: LTX-Video (más rápido)</li>
+                    </ul>
+                    
+                    <h3>3. Generador de Reels (30 × 15s)</h3>
+                    <p><strong>Automatizar 30 TikToks/reels por día.</strong></p>
+                    <ul>
+                        <li>Tiempo: 30 minutos (con optimización)</li>
+                        <li>Ingresos: $500-1200/mes</li>
+                    </ul>
+                    
+                    <h3>4. Sistema Autónomo (n8n + FastAPI)</h3>
+                    <p><strong>Generación automática de contenido sin intervención.</strong></p>
+                    
+                    <h3>5. Feature Film (30 min)</h3>
+                    <p><strong>Película cinematográfica profesional.</strong></p>
+                    <ul>
+                        <li>Tiempo: 4 semanas (paralelo)</li>
+                        <li>Opción: GPU rental para acelerar</li>
+                    </ul>
+                    
+                    <a href="#" class="download-btn">📥 ejemplos_proyectos_reales.md</a>
+                `
+            },
+            {
+                id: 11,
+                number: 11,
+                title: "Automatización con n8n + FastAPI",
+                description: "Sistema completo de producción autónoma",
+                time: "2-3 horas",
+                level: "Experto",
+                content: `
+                    <h3>🤖 Automatización Completa</h3>
+                    <p>Sistema que genera películas sin intervención manual.</p>
+                    
+                    <h3>Arquitectura</h3>
+                    <div class="code-block">[Scraper de Keywords]
+    ↓
+[OpenAI ChatGPT]
+    ↓
+[n8n Webhook]
+    ↓
+[FastAPI Backend]
+    ↓
+[ComfyUI Generator]
+    ↓
+[YouTube Upload]</div>
+                    
+                    <h3>Instalación</h3>
+                    <div class="code-block">docker run -d -p 5678:5678 n8nio/n8n
+pip install fastapi uvicorn pydantic moviepy
+uvicorn movie_api:app --reload</div>
+                    
+                    <h3>Potencial de Ingresos</h3>
+                    <ul>
+                        <li>Throughput: 180 videos/día</li>
+                        <li>25 videos × 1M views = $625-1250/mes</li>
+                        <li>Passive income completamente automatizado</li>
+                    </ul>
+                    
+                    <h3>Casos de Uso</h3>
+                    <ul>
+                        <li>YouTube channel autónomo</li>
+                        <li>TikTok creator bot</li>
+                        <li>Stock footage generator</li>
+                        <li>Marketing content factory</li>
+                    </ul>
+                    
+                    <a href="#" class="download-btn">📥 guia_completa_pelicula_comfyui.md</a>
+                `
+            },
+            {
+                id: 12,
+                number: 12,
+                title: "Plan de Acción (Quick Start)",
+                description: "Guía paso a paso para tu primera película en 24h",
+                time: "9.5 horas",
+                level: "Principiante",
+                content: `
+                    <h3>🚀 Primera Película en 1 Día</h3>
+                    <p>Plan realista y ejecutable.</p>
+                    
+                    <h3>SÁBADO 09:00 → Instalación (1h)</h3>
+                    <ul>
+                        <li>Descargar ComfyUI</li>
+                        <li>Instalar custom nodes</li>
+                        <li>Descargar SDXL + Wan 2.2</li>
+                    </ul>
+                    
+                    <h3>SÁBADO 10:00 → Guión (0.5h)</h3>
+                    <ul>
+                        <li>Usar ChatGPT para generar guión JSON</li>
+                        <li>5 escenas mínimo</li>
+                    </ul>
+                    
+                    <h3>SÁBADO 10:30 → Keyframes (2.2h) ⚡</h3>
+                    <ul>
+                        <li>Ejecutar SDXL workflow</li>
+                        <li>8 imágenes = 2.2 horas</li>
+                    </ul>
+                    
+                    <h3>SÁBADO 12:45 → Videos (5.1h) ⚡</h3>
+                    <ul>
+                        <li>Ejecutar Wan 2.2 workflow</li>
+                        <li>8 videos de 8s = 5.1 horas</li>
+                    </ul>
+                    
+                    <h3>SÁBADO 18:00 → Audio (1h)</h3>
+                    <ul>
+                        <li>Generar diálogos (ElevenLabs)</li>
+                        <li>Generar música (MusicGen)</li>
+                        <li>Sincronizar con MoviePy</li>
+                    </ul>
+                    
+                    <h3>SÁBADO 19:00 → Post-Producción (1.5h)</h3>
+                    <ul>
+                        <li>RIFE Interpolation (opcional)</li>
+                        <li>Color Grading</li>
+                        <li>Encoding final MP4</li>
+                    </ul>
+                    
+                    <h3>SÁBADO 20:30 → ¡PELÍCULA LISTA! 🎉</h3>
+                    <p>5 minutos de cine puro con IA.</p>
+                    
+                    <a href="#" class="download-btn">📥 TODOS LOS DOCUMENTOS (ZIP)</a>
+                `
+            }
+        ];
+
+        // RENDER MODULES
+        function renderModules() {
+            const curriculum = document.getElementById('curriculum');
+            curriculum.innerHTML = modules.map(module => `
+                <div class="module-card" onclick="openModal(${module.id})">
+                    <div class="module-number">${module.number}</div>
+                    <div class="module-title">${module.title}</div>
+                    <div class="module-desc">${module.description}</div>
+                    <div class="module-meta">
+                        <div class="module-time">⏱️ ${module.time}</div>
+                        <div class="module-level">${module.level}</div>
+                        <div class="module-status">→</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // OPEN MODAL
+        function openModal(moduleId) {
+            const module = modules.find(m => m.id === moduleId);
+            if (module) {
+                document.getElementById('modalTitle').innerHTML = `${module.number}. ${module.title}`;
+                document.getElementById('modalBody').innerHTML = module.content;
+                document.getElementById('modal').classList.add('active');
+                updateProgress();
+            }
+        }
+
+        // CLOSE MODAL
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // UPDATE PROGRESS
+        function updateProgress() {
+            const visited = JSON.parse(localStorage.getItem('visited') || '[]');
+            const percentage = (visited.length / modules.length) * 100;
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `${visited.length}/${modules.length}`;
+        }
+
+        // TRACK VISITED
+        const originalOpenModal = window.openModal;
+        window.openModal = function(moduleId) {
+            const visited = JSON.parse(localStorage.getItem('visited') || '[]');
+            if (!visited.includes(moduleId)) {
+                visited.push(moduleId);
+                localStorage.setItem('visited', JSON.stringify(visited));
+            }
+            originalOpenModal(moduleId);
+        };
+
+        // CLOSE MODAL ON ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // CLOSE MODAL ON OUTSIDE CLICK
+        document.getElementById('modal')?.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('modal')) closeModal();
+        });
+
+        // INITIALIZE
+        renderModules();
+        updateProgress();
+    </script>
+</body>
+</html>
